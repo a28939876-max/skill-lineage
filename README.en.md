@@ -23,8 +23,9 @@
 > Oh, and that 497-star origin? It recently deleted the skill from its repo.
 > The index sites haven't noticed.
 
-(None of this is fiction — every line comes from real lineage traces in
-[cases/](./cases/).)
+(None of this is fiction — every line comes from real lineage traces. The
+four write-ups in [cases/](./cases/) are typical picks from many such traces,
+not the full list.)
 
 ## What this does for you
 
@@ -44,13 +45,14 @@ and open to contributions).
 
 ### How we use it ourselves
 
-This tool wasn't built to be open-sourced — it ran in our own daily routine
-first: every third-party skill gets a lineage trace before installation.
-The four [cases/](./cases/) came from exactly that. Once, star-sorting picked
-three 100+-star candidates; lineage tracing replaced them all with 8-star and
-14-star derivatives. Another time, a diff caught an installer-injected
-silent-reporting instruction. **One caught stowaway was all it took to turn
-lineage tracing from "extra work" into a pre-install reflex.**
+This tool wasn't built to be open-sourced — we simply use it ourselves:
+every third-party skill gets a lineage trace before installation. We've done
+this many times; the four [cases/](./cases/) are just the most typical ones.
+Once, star-sorting picked three 100+-star candidates; lineage tracing
+replaced them all with 8-star and 14-star derivatives. Another time, a diff
+caught an installer-injected silent-reporting instruction. **Plainly put:
+after catching one injected instruction for real, checking before installing
+just became a habit.**
 
 ---
 
@@ -107,6 +109,9 @@ python3 scripts/diff_skill.py \
 ```
 
 ## Real cases
+
+> Four typical write-ups picked from many real traces — not the full list.
+> Each comes with charts and reproducible data; more will be added.
 
 | Case | One-line spoiler |
 |---|---|

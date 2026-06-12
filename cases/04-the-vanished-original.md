@@ -35,11 +35,12 @@ pie showData title 26 个衍生版的成色
 ## 教训
 
 1. **索引站是快照，GitHub 是现实。** 聚合站可能滞后数天到数周；装之前永远以仓库当前状态为准，404 ≠ 你输错了路径，可能是它真没了。
-2. **fork 数量是最廉价的虚假繁荣。** 12 个 fork 全部零改动描述——fork 按钮一秒就能点，is_mirror 判定让它们现出原形。
-3. **same-name 路线再次立功**：当原版自己都不稳定时，独立同名生态（149⭐ 的中文实现）可能才是真正可装的选择。
+2. **fork 数看着热闹，其实最不可靠。** fork 按钮一秒就能点，这 12 个 fork 的描述全是零改动——用 is_mirror 一判就现了原形。
+3. **same-name 这条路又一次派上用场**：当原版自己都不稳定时，独立同名生态（149⭐ 的中文实现）可能才是真正可装的选择。
 4. 修谱报告必须带**查询时间戳**（见 template 的 Data caveats 节）——族谱是某一时刻的快照，不是永久事实。
 
 ## 数据来源
 
+- 本篇是众多实测修谱记录里挑出的典型之一。
 - `find_derivatives.py aaronjmars/aeon --skill-name skill-security-scan`
 - raw 直链 main/master 双 404 + trees API 全量路径核对。

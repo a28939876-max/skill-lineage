@@ -28,14 +28,15 @@ graph TD
 
 ## 这个族证明了什么
 
-1. **「族内最优」取决于你是谁。** 中文团队的最优是 superpowers-zh（它自己就 5229⭐——衍生版做大不是奇迹）；Copilot 用户的最优是 DwainTR 的移植；原教旨用户的最优仍是原版。**不存在脱离使用者的"最好版本"。**
+1. **哪个版本最好，取决于你是谁。** 中文团队选 superpowers-zh 最合适（它自己就拿了 5229⭐——衍生版也能做得很大）；用 Copilot 的选 DwainTR 的移植版；想要原汁原味的还是选原版。**离开"给谁用"，谈不上"最好版本"。**
 2. **same-name 路线不可省。** superpowers-zh 不是 fork——GitHub 的 fork 图谱里根本没有它。只看 forks 你会以为这个族只有镜像。
 3. **衍生有三种**：改良（steroids）、移植（copilot/trae）、桥接（superspec）。修谱时别只盯着"改了原文件的"。
-4. **改名是 diff 的天敌。** steroids 把 24 个 skill 全部重命名，与原版零路径交集——这时 `diff_skill.py` 会 404，正确动作是退回 trees API 做名字映射，或降级读 README 概括改动。
-5. **镜像判定干净利落。** 刚建不久的 fork 一字未改：change_ratio 精确为 0.0。这种衍生版不需要任何讨论。
+4. **衍生版一改文件名，diff 就对不上了。** steroids 把 24 个 skill 全部重命名，和原版没有一个路径相同——这时 `diff_skill.py` 会 404，正确做法是退回 trees API 把新旧名字对上，或者退一步读它 README 概括改动。
+5. **镜像一判一个准。** 刚建不久的 fork 一字未改：change_ratio 精确为 0.0。这种衍生版不用再花时间讨论。
 
 ## 数据来源
 
+- 本篇是众多实测修谱记录里挑出的典型之一。
 - `find_derivatives.py obra/superpowers --skill-name superpowers`
 - `diff_skill.py` 实测两对：origin vs superpowers-zh（0.8433）、origin vs mesopowers（0.0）
 - GitHub trees API 交集验证：origin 14 个 SKILL.md vs steroids 24 个，交集 0。
