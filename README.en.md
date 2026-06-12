@@ -172,6 +172,7 @@ python3 scripts/diff_skill.py \
 
 ## Pairs well with
 
+- **[world-aid](https://github.com/a28939876-max/world-aid)** — the sibling project: this repo vets a known candidate, world-aid runs the full need-to-install chain (and fetches its lineage tools from here).
 - **Aggregator indexes** (SkillsMP etc.) for discovery — then trace lineage here; indexes lag reality.
 - **[NVIDIA SkillSpector](https://github.com/NVIDIA/skillspector)** for serious security scanning — our `security_flags` is a keyword heuristic, not a scanner.
 
