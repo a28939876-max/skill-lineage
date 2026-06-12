@@ -111,6 +111,13 @@ Every filter is an objective verdict, no taste involved:
 This layer answers "which ones are **not** good" cleanly — 26 in,
 typically 2-4 survive.
 
+> A fair question: one injected line in a 300-line file is a 0.3% change —
+> wouldn't it be waved through as a mirror? No harm done: a mirror verdict
+> means **dropped, never installed**, so a "misjudged" copy never reaches
+> your machine. And `injection_hits` doesn't go through the diff at all —
+> it scans the derivative's **full text**, regardless of how small the
+> change ratio is.
+
 ### Layer 2: no ranking — match "what changed" against "what you need" (judged)
 
 For each survivor, read `added_lines` and summarize the change in one
@@ -167,6 +174,21 @@ python3 scripts/diff_skill.py \
 
 - **Aggregator indexes** (SkillsMP etc.) for discovery — then trace lineage here; indexes lag reality.
 - **[NVIDIA SkillSpector](https://github.com/NVIDIA/skillspector)** for serious security scanning — our `security_flags` is a keyword heuristic, not a scanner.
+
+## FAQ
+
+**Q: You only diff SKILL.md — what about malicious code hiding in scripts/?**
+A: Correct, SKILL.md is the default. When a derivative ships scripts, diff
+the key ones with `--file`; for whole-repo scanning, hand it to a dedicated
+scanner (e.g. NVIDIA SkillSpector). Our screening is positioned as **the
+last pre-install eyeball check**, not a repo scanner — we keep that
+boundary explicit.
+
+**Q: Activity signals can be gamed — one empty commit and active=true.**
+A: Yes. Stars, pushed_at, active — every metadata signal is a proxy and
+every proxy can be gamed. That's why the mechanical layer only **eliminates,
+never crowns**: a gamed candidate still has to pass the semantic layer —
+what actually sits in `added_lines` can't be faked — and then human review.
 
 ## Honesty notes
 
