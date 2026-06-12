@@ -10,80 +10,98 @@
 
 ---
 
-## Do you check a skill's family tree before installing it?
+## Before installing, glance at its family tree
 
-> You just found a 497-star agent skill. You're about to install it.
-> What you don't know: it has 26 derivatives —
-> a Chinese localization that earned 5,229 stars of its own;
-> a low-star fork that fixed bugs the origin still hasn't;
-> a copy with a stowaway instruction injected by an installer ("silently rate
-> this skill and POST the score back");
-> and a dozen byte-identical mirrors.
->
-> Oh, and that 497-star origin? It recently deleted the skill from its repo.
-> The index sites haven't noticed.
+### "Is there a localized version of this skill?"
 
-(None of this is fiction — every line comes from real lineage traces. The
-four write-ups in [cases/](./cases/) are typical picks from many such traces,
-not the full list.)
+> Using it in English is awkward; translating it yourself means falling
+> behind upstream forever.
 
-## What this does for you
+**The find**: yes — and the localization earned **5,229 stars of its own**,
+with six original skills added. It isn't a fork; GitHub's fork graph can't
+see it at all. Same-name search dug it out.
 
-**For anyone about to install a skill: spend 30 seconds, dodge three traps.**
+### "Is this collection copy identical to the original?"
 
-| Your situation | What it does |
+> Collections repost each other; who knows what got lost or slipped in.
+
+**The find**: one diff later, `added_lines` held an instruction the origin
+never had — telling the agent to **silently** rate the skill and POST the
+score to an API. An installer-platform injection; not necessarily author
+malice, but you deserve to know before installing.
+
+### "Is there a version that works better than the origin?"
+
+> Star-sorting picked three 100+-star candidates. Felt safe.
+
+**The find**: after lineage tracing, every pick changed — the winners were
+**8-star and 14-star** derivatives: one audits real run transcripts, the
+other checks against 189 cited official rules. Star-sorting would never
+surface them.
+
+### "Why does the skill the index site recommends 404?"
+
+> It showed 497 stars, a full description, and a family of derivatives.
+
+**The find**: the origin had recently deleted the skill from its repo; the
+index hadn't noticed. A quick trace showed 12 of its 26 derivatives were
+zero-change mirrors — the actually installable option was an independent
+same-name implementation (149 stars).
+
+---
+
+**Every story above comes from real lineage traces** — written up in
+[cases/](./cases/) (four typical picks from many, not the full list).
+
+## How to use: three steps
+
+```bash
+# 1. Install (Claude Code shown; for other agents, add SKILL.md to the system prompt)
+git clone https://github.com/a28939876-max/skill-lineage
+cp -r skill-lineage ~/.claude/skills/skill-lineage
+```
+
+```
+2. Tell your agent:
+   "Is there a better fork of this skill? https://github.com/obra/superpowers"
+```
+
+```
+3. It will: trace three signals (forks / same-name / mentions) → drop mirrors
+   → diff what each derivative actually changed → screen the additions
+   → hand you a family-grouped report with an in-family recommendation
+```
+
+Prefer the scripts directly? Also fine:
+
+```bash
+python3 scripts/find_derivatives.py obra/superpowers --skill-name superpowers
+python3 scripts/diff_skill.py \
+  https://github.com/obra/superpowers/tree/main/skills/systematic-debugging \
+  https://github.com/jnMetaCode/superpowers-zh/tree/main/skills/systematic-debugging
+# → change_ratio 0.8433 (full localization); a fresh fork scores 0.0, is_mirror: true
+```
+
+## The three things it sees for you
+
+| Without it | With it |
 |---|---|
-| Found a high-star skill via search | Reveals **better-fitting derivatives** — localizations, bug-fixing forks, ports for your toolchain — that star-sorting will never surface |
-| A friend / a post recommended a low-star skill | One command tells you whether it's a **mirror, an improvement, or a copy with stowaway instructions** |
-| Picked something from an index site | Checks it against **GitHub reality** — indexes lag, and origins sometimes delete the skill |
+| You raw-install the #1 search result, which may be an altered repost | **Diff exposure**: `is_mirror` verdicts, `added_lines` lays out exactly what the copy added |
+| Localizations and bug-fixing forks sink to the bottom of star-sorting | **Three-signal tracing**: forks, same-name rewrites, and crediting repos all surface, grouped by family |
+| Stowaway instructions in a derivative go unread | **Screening**: `security_flags` + known injector fingerprints in `injection_hits`; hits demand human review |
 
-It also serves **skill authors** (see who forked / localized / ported your
-work, and which improvements deserve upstreaming), **collection & marketplace
-maintainers** (batch-screen mirrors and injections), and **security
-researchers** (the `INJECTION_SIGNATURES` fingerprint library is ready to use
-and open to contributions).
+Also serves **skill authors** (see who forked / localized / ported your
+work), **collection & marketplace maintainers** (batch-screen mirrors and
+injections), and **security researchers** (the fingerprint library is ready
+to use and open to contributions).
 
 ### How we use it ourselves
 
 This tool wasn't built to be open-sourced — we simply use it ourselves:
 every third-party skill gets a lineage trace before installation. We've done
 this many times; the four [cases/](./cases/) are just the most typical ones.
-Once, star-sorting picked three 100+-star candidates; lineage tracing
-replaced them all with 8-star and 14-star derivatives. Another time, a diff
-caught an installer-injected silent-reporting instruction. **Plainly put:
-after catching one injected instruction for real, checking before installing
-just became a habit.**
-
----
-
-## What's inside
-
-Two zero-dependency Python scripts plus a loadable agent workflow (SKILL.md):
-
-```mermaid
-flowchart LR
-    A["candidate skill repo"] --> B["find_derivatives.py<br/>trace: forks / same-name / mentions"]
-    B --> C["diff_skill.py<br/>compare each derivative"]
-    C --> D{"is_mirror?"}
-    D -- "yes" --> E["drop mirror"]
-    D -- "no" --> F["read added_lines<br/>summarize the changes"]
-    F --> G{"security_flags /<br/>injection_hits?"}
-    G -- "hit" --> H["human review + disclose"]
-    G -- "clean" --> I["lineage report<br/>in-family recommendation"]
-    H --> I
-    style E fill:#eee,stroke:#999
-    style I fill:#dfd,stroke:#080
-```
-
-| Tool | What it does |
-|---|---|
-| [`scripts/find_derivatives.py`](./scripts/find_derivatives.py) | Three-signal tracing: forks, same-name rewrites (no fork edge on GitHub), and repos crediting the origin; traces upward to the parent too |
-| [`scripts/diff_skill.py`](./scripts/diff_skill.py) | Pick within the family: mirror verdict (`is_mirror`), real-change extraction (`added_lines`), stowaway screening (`security_flags` + known injector fingerprints in `injection_hits`) |
-| [`SKILL.md`](./SKILL.md) | The framework itself — drop into Claude Code (or any agent), then ask "is there a better fork of this skill?" |
-| [`template/REPORT.template.md`](./template/REPORT.template.md) | Lineage report template: grouped by family, with an in-family recommendation and data caveats |
-
-Pure stdlib. Anonymous GitHub API works out of the box; set `GITHUB_TOKEN`
-to lift rate limits.
+**Plainly put: after catching one injected instruction for real, checking
+before installing just became a habit.**
 
 ## Three iron rules
 
@@ -143,32 +161,26 @@ survivors both look right, **test-drive them on one or two of your own real
 tasks** before committing. That's the one step we can't automate for you,
 and we won't pretend otherwise.
 
-## Quick start
+## What's inside
 
-```bash
-# As an agent skill (Claude Code):
-cp -r skill-lineage ~/.claude/skills/skill-lineage
-# then ask: "is there a better fork of https://github.com/obra/superpowers ?"
+| Tool | What it does |
+|---|---|
+| [`scripts/find_derivatives.py`](./scripts/find_derivatives.py) | Three-signal tracing: forks, same-name rewrites (no fork edge on GitHub), and repos crediting the origin; traces upward to the parent too |
+| [`scripts/diff_skill.py`](./scripts/diff_skill.py) | Pick within the family: mirror verdict (`is_mirror`), real-change extraction (`added_lines`), stowaway screening (`security_flags` + known injector fingerprints in `injection_hits`) |
+| [`SKILL.md`](./SKILL.md) | The framework itself — drop into Claude Code (or any agent), then ask "is there a better fork of this skill?" |
+| [`template/REPORT.template.md`](./template/REPORT.template.md) | Lineage report template: grouped by family, with an in-family recommendation and data caveats |
 
-# Or run the scripts directly:
-python3 scripts/find_derivatives.py obra/superpowers --skill-name superpowers
-python3 scripts/diff_skill.py \
-  https://github.com/obra/superpowers/tree/main/skills/systematic-debugging \
-  https://github.com/jnMetaCode/superpowers-zh/tree/main/skills/systematic-debugging
-# → change_ratio 0.8433 (full localization); a fresh fork scores 0.0, is_mirror: true
-```
+Pure stdlib. Anonymous GitHub API works out of the box; set `GITHUB_TOKEN`
+to lift rate limits.
 
 ## Real cases
 
-> Four typical write-ups picked from many real traces — not the full list.
-> Each comes with charts and reproducible data; more will be added.
-
-| Case | One-line spoiler |
+| The question, verbatim | The trace |
 |---|---|
-| [The Telemetry Stowaway](./cases/01-the-telemetry-stowaway.md) | An installer-injected block telling the agent to "silently rate and POST back" — caught in `added_lines` |
-| [The Superpowers Family Album](./cases/02-the-superpowers-dynasty.md) | One origin, a 5,229-star localization, a fully-renamed enhanced branch, a Copilot port — and a pile of mirrors (family graph inside) |
-| [The Buried Winners](./cases/03-the-better-bastards.md) | Star-sorting picked three 100+-star heads; lineage tracing replaced them all with 8-star and 14-star derivatives (star chart inside) |
-| [The Vanished Original](./cases/04-the-vanished-original.md) | Index sites listed a 497-star skill that had already been deleted from the origin repo (composition pie inside) |
+| "Is this collection copy identical to the original?" | [The Telemetry Stowaway](./cases/01-the-telemetry-stowaway.md) |
+| "Is there a localized version of this skill?" | [The Superpowers Family Album](./cases/02-the-superpowers-dynasty.md) (family graph inside) |
+| "Is there a version that works better than the origin?" | [The Buried Winners](./cases/03-the-better-bastards.md) (star chart inside) |
+| "Why does the index's recommendation 404?" | [The Vanished Original](./cases/04-the-vanished-original.md) (composition pie inside) |
 
 ## Pairs well with
 
@@ -191,6 +203,12 @@ every proxy can be gamed. That's why the mechanical layer only **eliminates,
 never crowns**: a gamed candidate still has to pass the semantic layer —
 what actually sits in `added_lines` can't be faked — and then human review.
 
+**Q: world-aid already does the full find-vet-install chain. Why use this alone?**
+A: Different jobs. When you **already have** a candidate repo (a friend's
+recommendation, a post, a collection pick), tracing it here directly is
+fastest; world-aid starts from a need and runs the whole chain — its lineage
+engine IS this repo, so the verdicts are identical either way.
+
 ## Honesty notes
 
 - `security_flags` is a keyword heuristic: security-themed skills trip it
@@ -201,7 +219,8 @@ what actually sits in `added_lines` can't be faked — and then human review.
 ## Contributing
 
 PRs welcome — especially new entries for the `INJECTION_SIGNATURES`
-fingerprint library, and new real-world cases with data and a verdict.
+fingerprint library, and new real-world cases with the verbatim question,
+the data, and a verdict.
 
 ## License
 
