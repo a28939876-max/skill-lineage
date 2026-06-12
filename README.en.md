@@ -93,6 +93,49 @@ to lift rate limits.
    Always diff before installing, and read every line the derivative ADDED.
 3. **Mirrors get dropped.** <2% change means no reason to exist — take the origin.
 
+## So how do we actually decide which fork is "best"?
+
+Straight answer: **we don't compute "best" mechanically. It's a two-layer
+process — mechanical elimination, then semantic matching.**
+
+### Layer 1: three hard filters shrink the pool (computed)
+
+Every filter is an objective verdict, no taste involved:
+
+| Filter | Criterion | Observed effect (the 26-derivative trace) |
+|---|---|---|
+| Mirror drop | `change_ratio < 2%` → `is_mirror=true` | 12 zero-change forks out |
+| Activity | `active=false` (no push since forking) and older than origin | bookmark-forks out |
+| Screening | `injection_hits` / `security_flags` hit | not dropped, but demoted to "human review first" |
+
+This layer answers "which ones are **not** good" cleanly — 26 in,
+typically 2-4 survive.
+
+### Layer 2: no ranking — match "what changed" against "what you need" (judged)
+
+For each survivor, read `added_lines` and summarize the change in one
+sentence (localization? trigger fixes? new modes? a port?), then hold that
+sentence against your need:
+
+- A Chinese team's best is the localization; a Copilot user's best is the
+  port; a purist's best is still the origin.
+- That's why the report format is **"in-family recommendation + reason"**,
+  never "the No.1". **"Best" is undefined apart from "best for whom".**
+
+And that's why there is **no single overall score**: mirror verdict, change
+summary, activity, screening result — four dimensions laid out, final call
+is yours.
+
+### The honest boundary
+
+This method judges **whose changes fit you best**, not **which version runs
+best**. We do not execute candidate skills: running unknown third-party
+skills has a security cost (the very thing our screening guards against),
+and "quality" has no definition apart from a concrete need. When two
+survivors both look right, **test-drive them on one or two of your own real
+tasks** before committing. That's the one step we can't automate for you,
+and we won't pretend otherwise.
+
 ## Quick start
 
 ```bash
