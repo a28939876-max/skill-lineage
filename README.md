@@ -113,7 +113,7 @@ flowchart LR
 ### 方式一：当 agent skill 用（推荐）
 
 ```bash
-git clone https://github.com/<you>/skill-lineage
+git clone https://github.com/a28939876-max/skill-lineage
 cp -r skill-lineage ~/.claude/skills/skill-lineage   # Claude Code
 # 其它 agent：把 SKILL.md 加进系统提示，脚本路径自行对应
 ```
