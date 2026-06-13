@@ -152,6 +152,7 @@ lift rate limits.
 ## Pairs well with
 
 - **[world-aid](https://github.com/a28939876-max/world-aid)** — the sibling project: this repo vets a known candidate, world-aid runs the full need-to-install chain (and fetches its lineage tools from here).
+- **[world-intro](https://github.com/a28939876-max/world-intro)** — the open-source launch pipeline that shipped this repo (and its sibling); point it at your own private skill to take it public.
 - **Aggregator indexes** (SkillsMP etc.) for discovery — then trace lineage here; indexes lag reality.
 - **[NVIDIA SkillSpector](https://github.com/NVIDIA/skillspector)** for serious security scanning — our `security_flags` is a keyword heuristic, not a scanner.
 

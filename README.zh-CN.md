@@ -127,6 +127,7 @@ python3 scripts/diff_skill.py \
 ## 配合食用
 
 - **[world-aid（世界援助）](https://github.com/a28939876-max/world-aid)**：姊妹项目。本仓库管"已有候选怎么验"，它管"从一个需求出发找+验+装"全链——它的修谱能力就是从这里取的。
+- **[world-intro](https://github.com/a28939876-max/world-intro)**：把这两个仓库开源出去的发布管线；想把你自己的私有 skill 推上线，就用它。
 - **聚合索引站**（SkillsMP 等）：先用它们做发现，再用本工具修谱——索引可能滞后，以仓库现状为准。
 - **[NVIDIA SkillSpector](https://github.com/NVIDIA/skillspector)**：本工具的 `security_flags` 只是关键词启发式目检；装前重型安检请交给专业扫描器。
 
