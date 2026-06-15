@@ -126,6 +126,7 @@ python3 scripts/diff_skill.py \
 
 ## 配合食用
 
+- **[skill-hunter-company（skill 猎头公司）](https://github.com/a28939876-max/skill-hunter-company)**：完整的 skill 生命周期公司；本仓是它的背调台（`vet` 那一步）。
 - **[world-aid（世界援助）](https://github.com/a28939876-max/world-aid)**：姊妹项目。本仓库管"已有候选怎么验"，它管"从一个需求出发找+验+装"全链——它的修谱能力就是从这里取的。
 - **[world-intro](https://github.com/a28939876-max/world-intro)**：把这两个仓库开源出去的发布管线；想把你自己的私有 skill 推上线，就用它。
 - **聚合索引站**（SkillsMP 等）：先用它们做发现，再用本工具修谱——索引可能滞后，以仓库现状为准。
